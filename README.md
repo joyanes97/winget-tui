@@ -36,12 +36,54 @@ A terminal user interface for [Windows Package Manager (winget)](https://github.
 
 ## Installation
 
-### From source
+### Download a release (recommended)
 
-```sh
+You do **not** need Rust to install or run `winget-tui`.
+
+1. Download the latest Windows binary from the [Releases page](https://github.com/shanselman/winget-tui/releases/latest):
+   - `winget-tui-x64.exe` for most Windows PCs
+   - `winget-tui-arm64.exe` for Windows on ARM
+2. Put the `.exe` somewhere convenient, such as `C:\Tools\winget-tui\`.
+3. Run it from Windows Terminal:
+
+```powershell
+.\winget-tui-x64.exe
+```
+
+Optionally rename the file to `winget-tui.exe` and add its folder to your `PATH` so you can run `winget-tui` from any terminal.
+
+### Run from source for development
+
+Building from source is only needed if you want to develop or test changes locally. It requires:
+
+- The Rust toolchain (`cargo`, `rustc`)
+- Visual Studio Build Tools with the C++ workload (`link.exe`) and a Windows SDK (`msvcrt.lib`)
+
+If `cargo` is not already available, install Rust first:
+
+```powershell
+winget install --id Rustlang.Rustup -e
+```
+
+If `cargo run` fails with `linker 'link.exe' not found` or `cannot open file 'msvcrt.lib'`, install the C++ build tools:
+
+```powershell
+winget install --id Microsoft.VisualStudio.2022.BuildTools -e
+```
+
+In the Visual Studio Build Tools installer, select **Desktop development with C++** and make sure a **Windows 10/11 SDK** is selected in the optional components. Close and reopen your terminal, then run the app from the repo:
+
+```powershell
 git clone https://github.com/shanselman/winget-tui.git
 cd winget-tui
+cargo run
+```
+
+For an optimized local build:
+
+```powershell
 cargo build --release
+.\target\release\winget-tui.exe
 ```
 
 The binary will be at `target\release\winget-tui.exe`.

@@ -452,9 +452,11 @@ fn handle_normal_mode(
         KeyCode::Char('u') => {
             if let Some(pkg) = app.selected_package() {
                 if pkg.is_truncated() {
-                    app.set_status(
-                        "Cannot upgrade: package ID was truncated by winget — use winget directly",
-                    );
+                    let name = pkg.name.clone();
+                    app.confirm = Some(ConfirmDialog {
+                        message: format!("Upgrade {}? (ID truncated in winget output)", name),
+                        operation: Operation::Upgrade { id: name },
+                    });
                 } else {
                     let id = pkg.id.clone();
                     app.confirm = Some(ConfirmDialog {
@@ -1297,6 +1299,24 @@ mod tests {
     }
 
     #[test]
+    fn single_upgrade_with_truncated_id_uses_name_query() {
+        let mut app = make_app_with_pkg("Microsoft.Azure.Function...", "4.0", "4.1");
+        app.mode = AppMode::Upgrades;
+
+        let _ = handle_normal_mode(&mut app, KeyCode::Char('u'), KeyModifiers::NONE);
+
+        let confirm = app.confirm.expect("confirm dialog should be set");
+        assert!(
+            confirm.message.contains("ID truncated"),
+            "confirm text should explain name-based fallback"
+        );
+        match confirm.operation {
+            Operation::Upgrade { id } => assert_eq!(id, "Test Package"),
+            _ => panic!("expected Upgrade operation"),
+        }
+    }
+
+    #[test]
     fn batch_upgrade_confirm_reports_truncated_skips() {
         let mut app = make_app();
         app.mode = AppMode::Upgrades;
@@ -1583,11 +1603,15 @@ mod tests {
     }
 
     #[test]
-    fn u_on_truncated_id_shows_status_not_confirm() {
+    fn u_on_truncated_id_uses_name_fallback_confirm() {
         let mut app = make_app_with_pkg("Truncated...", "1.0", "2.0");
         let _ = handle_normal_mode(&mut app, KeyCode::Char('u'), KeyModifiers::NONE);
-        assert!(app.status_message.contains("truncated"));
-        assert!(app.confirm.is_none());
+        let confirm = app.confirm.expect("confirm dialog should be shown");
+        assert!(confirm.message.contains("ID truncated"));
+        assert!(matches!(
+            confirm.operation,
+            Operation::Upgrade { ref id } if id == "Test Package"
+        ));
     }
 
     #[test]

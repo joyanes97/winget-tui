@@ -36,6 +36,16 @@ A terminal user interface for [Windows Package Manager (winget)](https://github.
 
 ## Installation
 
+### Install with Winget
+
+`winget-tui` has been submitted to the Windows Package Manager community
+repository as `Hanselman.WingetTUI`. Once the submission is merged, install it
+with:
+
+```powershell
+winget install Hanselman.WingetTUI
+```
+
 ### Download a release (recommended)
 
 You do **not** need Rust to install or run `winget-tui`.

@@ -75,6 +75,9 @@ jobs:
           $arm64Url = "$baseUrl/$env:COMMAND_ALIAS-$env:VERSION-arm64.zip"
 
           @"
+          # Created using winget-tui release workflow
+          # yaml-language-server: `$schema=https://aka.ms/winget-manifest.version.1.12.0.schema.json
+
           PackageIdentifier: $env:PACKAGE_ID
           PackageVersion: $env:VERSION
           DefaultLocale: en-US
@@ -83,6 +86,9 @@ jobs:
           "@ -replace "^[ \t]{10}", "" | Set-Content -Path (Join-Path $manifestRoot "$env:PACKAGE_ID.yaml") -Encoding utf8NoBOM
 
           @"
+          # Created using winget-tui release workflow
+          # yaml-language-server: `$schema=https://aka.ms/winget-manifest.defaultLocale.1.12.0.schema.json
+
           PackageIdentifier: $env:PACKAGE_ID
           PackageVersion: $env:VERSION
           PackageLocale: en-US
@@ -108,6 +114,9 @@ jobs:
           "@ -replace "^[ \t]{10}", "" | Set-Content -Path (Join-Path $manifestRoot "$env:PACKAGE_ID.locale.en-US.yaml") -Encoding utf8NoBOM
 
           @"
+          # Created using winget-tui release workflow
+          # yaml-language-server: `$schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
+
           PackageIdentifier: $env:PACKAGE_ID
           PackageVersion: $env:VERSION
           InstallerType: zip

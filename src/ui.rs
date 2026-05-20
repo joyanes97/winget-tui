@@ -17,6 +17,8 @@ use crate::app::{App, AppMode, ConfirmDialog, FocusZone, InputMode};
 use crate::models::{SortDir, SortField};
 use crate::theme;
 
+const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 pub fn draw(f: &mut Frame, app: &mut App) {
     let header_height = theme::LOGO_HEIGHT; // logo + tabs, no extra spacing
     let show_search_bar = app.mode == AppMode::Search
@@ -134,6 +136,18 @@ fn draw_header(f: &mut Frame, app: &mut App, area: Rect) {
         height: 1,
     };
     f.render_widget(Paragraph::new(tab_line), tab_rect);
+
+    let version_rect = Rect {
+        x: tabs_area.x,
+        y: tabs_area.y,
+        width: tabs_area.width,
+        height: 1,
+    };
+    let version = Paragraph::new(format!("v{APP_VERSION}"))
+        .style(Style::default().fg(theme::TEXT_SECONDARY))
+        .alignment(Alignment::Right);
+    f.render_widget(version, version_rect);
+
     app.layout.tab_regions = tab_regions;
 }
 
@@ -926,7 +940,9 @@ fn draw_help_overlay(f: &mut Frame, app: &mut App) {
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
         .border_style(theme::border_focused())
-        .title(" Help -- Keybindings  ↑↓ to scroll ")
+        .title(format!(
+            " Help -- winget-tui v{APP_VERSION} -- Keybindings  ↑↓ to scroll "
+        ))
         .title_style(
             Style::default()
                 .fg(theme::ACCENT)

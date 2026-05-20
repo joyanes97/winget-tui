@@ -7,6 +7,13 @@ Versions match the `v<major>.<minor>.<patch>` tags in git.
 
 ---
 
+## [0.12.0] – 2026-05-20
+
+### Added
+- Display the app version in the TUI header and help overlay.
+
+---
+
 ## [0.11.0] – 2026-05-17
 
 ### Added
